@@ -1,5 +1,6 @@
 services:
   bankapp:
+    container_name: "bankapp"
     depends_on:
       - "mariadb"
     build:
@@ -9,6 +10,7 @@ services:
     ports:
       - "8080:8080"
   mariadb:
+    container_name: "mariadb"
     image: "mariadb:latest"
     ports:
       - "3306:3306"

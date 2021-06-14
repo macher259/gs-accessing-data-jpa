@@ -1,7 +1,11 @@
 services:
+
   bankapp:
     container_name: "bankapp"
     depends_on:
+      mariadb:
+        condition: service_healthy
+    links:
       - "mariadb"
     build:
       complete/.
@@ -9,6 +13,7 @@ services:
       - "./complete:/io"
     ports:
       - "8080:8080"
+
   mariadb:
     container_name: "mariadb"
     image: "mariadb:latest"
@@ -18,3 +23,9 @@ services:
       - MYSQL_DATABASE=bank
       - MYSQL_USER=bank
       - MYSQL_PASSWORD=banksecret
+      - MYSQL_ROOT_PASSWORD=banksecret
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-u", "bank", "--password=banksecret"]
+      timeout: 5s
+      retries: 3
+
